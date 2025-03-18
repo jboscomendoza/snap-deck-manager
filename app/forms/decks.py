@@ -5,11 +5,17 @@ from wtforms import (
 from wtforms.validators import DataRequired
 
 class FormDecks(FlaskForm):
-    deck_name = StringField(
+    name = StringField(
         "Deck name",
         validators=[
             DataRequired(),
-        ]
+            ]
+        )
+    decklist = TextAreaField(
+        "Deck list",
+        validators=[
+            DataRequired(),
+            ],
         )
     send = SubmitField("Send")
     

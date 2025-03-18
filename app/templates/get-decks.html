@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table class="table table-hover table-sm" >
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Decklist</th>
+            <th scope="col">Code</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for deck in deck_items %}
+        <tr>
+            <td>{{ deck["name"] }}</td>
+            <td style="word-wrap:break-word; min-width:180px; max-width:180px;">{{ deck["cards"] | replace("\r", "<br>" | safe)}}</td>
+            <td style="word-wrap:break-word; min-width:180px; max-width:180px;">{{ deck["code"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

@@ -1,9 +1,16 @@
 {% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
 
 {% block content %}
 
 <div class="row">
-    <p>Hi!</p>
+            <a href="{{ url_for("decks.add_decks") }}">
+                Add decks
+            </a>
+
+            <a href="{{ url_for("decks.get_decks") }}">
+                Get decks
+            </a>
 </div>
 
 {% endblock content %}
