@@ -42,7 +42,7 @@ def add_decks():
 
 @bp.route("/get-decks/", methods=["GET", "POST"])
 def get_decks():
-    title="Get decks"
+    title="Decks"
     decks = db.session.query(Deck)
     deck_items = []
     for i in decks:
@@ -59,6 +59,7 @@ def get_decks():
         "get-decks.html",
         title=title,
         deck_items=deck_items,
+        decks=decks,
     )
 
 @bp.route("/view-decks/<int:id>", methods=["GET", "POST"])

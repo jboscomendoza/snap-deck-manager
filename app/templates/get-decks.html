@@ -1,26 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<table class="table table-hover table-sm" >
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Decklist</th>
-            <th scope="col">Code</th>
-            <th scope="col">Tags</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for deck in deck_items %}
-        <tr>
-            <td>{{ deck["name"] }}</td>
-            <td style="word-wrap:break-word; min-width:180px; max-width:180px;">{{ deck["cards"] | replace("\r", "<br>" | safe)}}</td>
-            <td style="word-wrap:break-word; min-width:180px; max-width:180px;">{{ deck["code"] }}</td>
-            <td style="word-wrap:break-word; min-width:180px; max-width:180px;">{{ deck["tag"] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-hover table-sm" >
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deck in decks %}
+                <tr>
+                    <td>{{ deck.name }}</td>
+                    <td class="text-break">
+                    {% for tag in deck.tags %}
+                    <span class="badge bg-primary rounded-pill">{{ tag.name }}</span>
+                    {% endfor %}
+                    </td>
+                    <td><a
+                    href={{ url_for("decks.view_decks", id=deck.id)}} 
+                    class="btn btn-primary btn-md">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock content %}

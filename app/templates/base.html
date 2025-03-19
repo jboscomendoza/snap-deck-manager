@@ -17,8 +17,11 @@
 <body>
     <div class="container" style="margin-top:1em;">
         {% include "navbar.html" %}
-        <div class="h1">{{ title }}</div>
-        {% block content %}{% endblock content %}
+        <div class="row">
+            <p class="h1">{{ title }}</p>
+        </div>
+        {% block content %}
+        {% endblock content %}
         {% block footer %}
         <footer>
             <hr>
