@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, flash, url_for
 from app.extensions import db
 from app.decks import bp
 from app.forms.decks import FormDecks
-from app.models.decks import Deck
+from app.models.decks import Deck, Tag
 
 @bp.route("/", methods=["GET", "POST"])
 def index():
@@ -18,13 +18,18 @@ def add_decks():
     title="Add decks"
     form=FormDecks()
     if form.validate_on_submit() and request.method == "POST":
+        deck_name     = request.form["name"]
+        deck_decklist = request.form["decklist"]
+        tag_name      = request.form["tag"]
+        deck_tag = Tag(name=tag_name)
         deck = Deck(
-            name = request.form["name"],
-            decklist = request.form["decklist"],
+            name     = deck_name,
+            decklist = deck_decklist,
         )
+        deck.tags.append(deck_tag)
         db.session.add(deck)
         db.session.commit()
-        flash("Deck added")
+        flash("Deck added.")
         return redirect(url_for(
             "decks.get_decks"
         ))
@@ -46,6 +51,7 @@ def get_decks():
             "name"  : i.name,
             "cards" : "".join(deck_cards),
             "code"  : decklist[13],
+            "tag"   : i.tags,
         }
         deck_items.append(deck_dict)
     return render_template(
