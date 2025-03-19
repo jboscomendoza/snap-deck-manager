@@ -1,0 +1,3 @@
+[submodule "app/marvel-snap-cards"]
+	path = app/marvel-snap-cards
+	url = https://github.com/jboscomendoza/marvel-snap-cards
