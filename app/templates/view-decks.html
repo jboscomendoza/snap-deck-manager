@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col-1">
+        <span class="fw-bold">Tags</span>
+    </div>
+    <div class="col-11">
+        {% for tag in deck.tags %}
+        <span class="badge bg-primary">{{ tag.name }}</span>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-1">
+        <span class="fw-bold">Code</span>
+    </div>
+    <div class="col-11">
+        <span class="text-break">{{ deck_code }}</span>
+    </div>
+</div>
+<div class="row">
+    <p class="h3">Decklist</p>
+</div>
+<table class="table table-hover table-sm" >
+    <thead>
+        <tr>
+            <th scope="col">Card</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in decklist %}
+        <tr>
+            <td>{{ card }}</td>
+            <td><a class="btn btn-primary btn-sm" href="#">Info</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock content %}
+

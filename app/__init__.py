@@ -18,7 +18,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, render_as_batch=True)
     
     ## Bootstrap
-    app.config["BOOTSTRAP_BOOTSWATCH_THEME"] = "lumen"
+    app.config["BOOTSTRAP_BOOTSWATCH_THEME"] = "pulse"
     bootstrap = Bootstrap5(app)
     
     # Blueprints
