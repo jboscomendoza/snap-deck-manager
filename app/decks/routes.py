@@ -22,15 +22,20 @@ with open(PATH_CARDS_JSON, mode="r") as f:
 
 @bp.route("/", methods=["GET", "POST"])
 def index():
-    title="Deck manager"
+    title="Home"
+    urls = {
+        "Add decks":"add_decks",
+        "Get decks":"get_decks",
+        }
     return render_template(
         "index.html",
         title=title,
+        urls=urls,
         )
 
 @bp.route("/add-decks/", methods=["GET", "POST"])
 def add_decks():
-    title="Add decks"
+    title="Add new deck"
     form=FormDecks()
     if form.validate_on_submit() and request.method == "POST":
         deck_name     = request.form["name"]

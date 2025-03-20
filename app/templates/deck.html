@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="row">
+<div class="row mb-2">
     <div class="col-1">
         <span class="fw-bold">Tags</span>
     </div>
@@ -10,6 +10,9 @@
         <span class="badge bg-primary rounded-pill">{{ tag.name }}</span>
         {% endfor %}
     </div>
+</div>
+
+<div class="row mb-2">
     <div class="col-1">
         <span class="fw-bold">Code</span>
     </div>
