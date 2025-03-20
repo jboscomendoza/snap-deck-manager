@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for key in keys %}
+<div class="row">
+    <div class="col-lg-1 col-2">
+        <span class="fw-bold"> {{ key | title }} </span>
+    </div>
+    <div class="col-lg-11 col-10">
+        {{ card_data[key] }}
+    </div>
+</div>
+{% endfor %}
+
+<div class="row">
+    <div class="col-12">
+        <a 
+        href={{card_data["url"]}}
+        target="_blank"
+        class="btn btn-primary btn-md">
+        View in snap.fan
+        </a>
+    </div>
+</div>
+
+{% endblock content %}

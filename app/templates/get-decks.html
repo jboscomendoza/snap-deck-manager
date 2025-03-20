@@ -21,8 +21,11 @@
                     {% endfor %}
                     </td>
                     <td><a
-                    href={{ url_for("decks.view_decks", id=deck.id)}} 
-                    class="btn btn-primary btn-md">View</a></td>
+                    class="btn btn-primary btn-md"
+                    href={{ url_for("decks.view_deck", id=deck.id)}} 
+                    >
+                    View
+                    </a></td>
                 </tr>
                 {% endfor %}
             </tbody>

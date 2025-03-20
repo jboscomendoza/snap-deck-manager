@@ -34,7 +34,11 @@
                 {% for card in decklist %}
                 <tr>
                     <td>{{ card }}</td>
-                    <td><a class="btn btn-primary btn-md" href="#">Info</a></td>
+                    <td>
+                        <a class="btn btn-primary btn-md" href={{url_for("decks.view_card", cardname=card)}}>
+                            View
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
