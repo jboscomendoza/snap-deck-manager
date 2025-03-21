@@ -40,13 +40,14 @@ def add_decks():
     if form.validate_on_submit() and request.method == "POST":
         deck_name     = request.form["name"]
         deck_decklist = request.form["decklist"]
-        tag_name      = request.form["tag"]
-        deck_tag = Tag(name=tag_name)
+        tag_names     = request.form["tag"]
+        tag_names = tag_names.split(",")
+        deck_tags = [Tag(name=i.strip()) for i in tag_names]
         deck = Deck(
             name     = deck_name,
             decklist = deck_decklist,
         )
-        deck.tags.append(deck_tag)
+        [deck.tags.append(i) for i in deck_tags]
         db.session.add(deck)
         db.session.commit()
         flash("Deck added.")

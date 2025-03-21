@@ -19,7 +19,8 @@ class FormDecks(FlaskForm):
             ],
         )
     tag = StringField(
-        "Tag",
+        "Tags",
+        description="Multiple tags separated by commas.",
         validators=[
             DataRequired(),
             Length(max=32),
