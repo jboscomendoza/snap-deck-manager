@@ -16,6 +16,7 @@ PATH_CARDS_JSON = path.join(
     "marvel-snap-cards",
     "marvel-snap-cards.json"
     )
+UNIQUE_ENERGY = [str(i) for i in range(9)]
 
 with open(PATH_CARDS_JSON, mode="r") as f:
     cards = json.load(f)
@@ -116,6 +117,11 @@ def view_deck(id):
     raw_decklist = raw_decklist.split("#")
     # 1:12 is the position of the card names in a standard decklist
     decklist = [re.sub(r"\(.\) ", "", i) for i in raw_decklist[1:12]]
+    raw_energy = [re.findall(r"\((\d)\)", i)[0] for i in raw_decklist[1:12]]
+    unique_energy = UNIQUE_ENERGY
+    count_energy = [raw_energy.count(i) for  i in unique_energy]
+    energy=dict(zip(unique_energy, count_energy))
+
     decklist = [i.strip() for i in decklist]
     # 23 is the position of the deck code in a standard decklist
     deck_code = raw_decklist[13]
@@ -125,6 +131,7 @@ def view_deck(id):
         deck=deck,
         decklist=decklist,
         deck_code=deck_code,
+        energy=energy,
     )
 
 @bp.route("/card/<string:cardname>")

@@ -54,5 +54,30 @@
     </div>
 </div> 
 
+<div class="row">
+    <div class="col-12">
+        <p class="h3">Energy curve</p>
+    </div>
+    <div class="col-12">
+        <table class="table table-hover table-sm" >
+            <thead>
+                <tr>
+                {% for unique_energy in energy.keys() %}
+                    <th scope="col"  style="width:10%;">{{ unique_energy }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                {% for count_energy in energy.values() %}
+                    <td style="width:10%;">{{ count_energy }}</td>
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> 
+
+
 {% endblock content %}
 
