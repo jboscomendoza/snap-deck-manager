@@ -7,7 +7,12 @@
     </div>
     <div class="col-11">
         {% for tag in deck.tags %}
-        <span class="badge bg-primary rounded-pill">{{ tag.name }}</span>
+        <a 
+        class="btn btn-dark btn-sm"
+        href={{ url_for("decks.get_tags", tag=tag.name) }}
+        >
+        {{ tag.name }}
+        </a>
         {% endfor %}
     </div>
 </div>

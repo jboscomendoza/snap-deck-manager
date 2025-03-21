@@ -7,29 +7,18 @@
             <thead>
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Tags</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for deck in decks %}
+                {% for tag in tags %}
                 <tr>
-                    <td>{{ deck.name }}</td>
-                    <td class="text-break">
-                    {% for tag in deck.tags %}
-                    <a
-                    class="btn btn-dark btn-sm me-1"
-                    href={{ url_for("decks.get_tags", tag=tag.name) }}
-                    >
-                    {{ tag.name }}
-                    </span>
-                    {% endfor %}
-                    </td>
+                    <td>{{ tag.name }}</td>
                     <td><a
                     class="btn btn-primary btn-md"
-                    href={{ url_for("decks.view_deck", id=deck.id)}} 
+                    href={{ url_for("decks.get_tags", tag=tag.name)}} 
                     >
-                    View
+                    View decks
                     </a></td>
                 </tr>
                 {% endfor %}

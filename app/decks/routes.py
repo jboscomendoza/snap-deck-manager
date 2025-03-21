@@ -26,6 +26,7 @@ def index():
     urls = {
         "Add decks":"add_decks",
         "Get decks":"get_decks",
+        "Get tags" :"get_tags",
         }
     return render_template(
         "index.html",
@@ -81,6 +82,30 @@ def get_decks():
         deck_items=deck_items,
         decks=decks,
     )
+
+@bp.route("/tag/", methods=["GET"])
+@bp.route("/tag/<string:tag>/", methods=["GET"])
+def get_tags(tag=None):
+    if not tag:
+        title = "Tags"
+        tags = db.session.execute(
+            db.select(Tag)
+        ).scalars()
+        return render_template(
+            "get-tags.html",
+            tags=tags,
+            title=title,
+        )
+    else:
+        title = f"Decks with tag: {tag}"
+        decks = db.session.execute(
+            db.select(Deck).join(Deck.tags).filter(Tag.name == tag)
+        ).scalars()
+        return render_template(
+            "get-decks.html",
+            title=title,
+            decks=decks,
+            )
 
 @bp.route("/deck/<int:id>/", methods=["GET", "POST"])
 def view_deck(id):
