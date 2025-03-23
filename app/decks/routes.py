@@ -42,14 +42,22 @@ def add_decks():
     if form.validate_on_submit() and request.method == "POST":
         deck_name     = request.form["name"]
         deck_decklist = request.form["decklist"]
-        tag_names     = request.form["tag"]
-        tag_names = tag_names.split(",")
-        deck_tags = [Tag(name=i.strip()) for i in tag_names]
         deck = Deck(
             name     = deck_name,
             decklist = deck_decklist,
         )
-        [deck.tags.append(i) for i in deck_tags]
+        tag_names     = request.form["tag"]
+        tag_names = [i.strip() for i in tag_names.split(",")]
+        # Check if tag already exists
+        for tag_name in tag_names:
+            tag_in_db = db.session.execute(
+                db.select(Tag).filter_by(name=tag_name)
+            ).scalar_one_or_none()
+            if tag_in_db:
+                deck.tags.append(tag_in_db)
+            else:
+                new_tag = Tag(name=tag_name)
+                deck.tags.append(new_tag)
         db.session.add(deck)
         db.session.commit()
         flash("Deck added.")
