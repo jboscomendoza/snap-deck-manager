@@ -78,6 +78,16 @@
     </div>
 </div> 
 
+<div class="row">
+    <div class="col-12">
+        <a
+        class="btn btn-primary btn-md"
+        href={{ url_for("decks.view_deck", id=deck.id, edit=True)}} 
+        >
+        Edit
+        </a>
+    </div>
+</div>
 
 {% endblock content %}
 

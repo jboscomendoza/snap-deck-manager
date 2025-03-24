@@ -64,6 +64,7 @@ def add_decks():
         return redirect(url_for(
             "decks.get_decks"
         ))
+    edit=False
     return render_template(
         "add-decks.html",
         title=title,
@@ -116,11 +117,48 @@ def get_tags(tag=None):
             decks=decks,
             )
 
-@bp.route("/deck/<int:id>/", methods=["GET", "POST"])
+@bp.route("/deck/<int:id>", methods=["GET", "POST"])
 def view_deck(id):
     deck = db.first_or_404(
         db.select(Deck).filter_by(id=id)
     )
+    edit = request.args.get("edit")
+    if edit and request.method == "POST":
+        deck.name     = request.form["name"]
+        deck.decklist = request.form["decklist"]
+        tag_names     = request.form["tag"]
+        tag_names = [i.strip() for i in tag_names.split(",")]
+        # Check if tag already exists
+        for tag_name in tag_names:
+            tag_in_db = db.session.execute(
+                db.select(Tag).filter_by(name=tag_name)
+            ).scalar_one_or_none()
+            if tag_in_db:
+                deck.tags.append(tag_in_db)
+            else:
+                new_tag = Tag(name=tag_name)
+                deck.tags.append(new_tag)
+        db.session.commit()
+        flash("Deck updated!")
+        return redirect(url_for(
+            "decks.view_deck",
+            id=deck.id,
+            ))
+    if edit:
+        title = f"Editing deck: {deck.name}"
+        # Tags as a single string
+        current_tags = ", ".join([i.name for i in deck.tags])
+        form = FormDecks(
+            name=deck.name,
+            decklist=deck.decklist,
+            tag=current_tags,
+        )
+        return render_template(
+            "add-decks.html",
+            title=title,
+            deck=deck,
+            form=form,
+        )
     raw_decklist = deck.decklist
     raw_decklist = raw_decklist.split("#")
     # 1:12 is the position of the card names in a standard decklist

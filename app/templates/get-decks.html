@@ -25,12 +25,20 @@
                     </span>
                     {% endfor %}
                     </td>
-                    <td><a
-                    class="btn btn-primary btn-md"
-                    href={{ url_for("decks.view_deck", id=deck.id)}} 
-                    >
-                    View
-                    </a></td>
+                    <td>
+                        <a
+                        class="btn btn-primary btn-md"
+                        href={{ url_for("decks.view_deck", id=deck.id)}} 
+                        >
+                        View
+                        </a>
+                        <a
+                        class="btn btn-primary btn-md"
+                        href={{ url_for("decks.view_deck", id=deck.id, edit=True)}} 
+                        >
+                        Edit
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

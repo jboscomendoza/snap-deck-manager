@@ -8,7 +8,10 @@
         {{ render_form(
             form,
             method="POST",
-            action=url_for("decks.add_decks"),
+            action=url_for(
+                "decks.add_decks",
+                edit=None,
+            ),
             ) }}
         </form>
 </div>
