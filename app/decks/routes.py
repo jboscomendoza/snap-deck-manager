@@ -18,6 +18,23 @@ PATH_CARDS_JSON = path.join(
     )
 UNIQUE_ENERGY = [str(i) for i in range(9)]
 
+def parse_cards(raw_decklist: str) -> list:
+    '''Returns a CARD list from  raw DECKLIST.'''
+    decklist = raw_decklist.split("#")
+    # 1:12 is the position of the card names in a standard decklist
+    decklist = [re.sub(r"\(.\) ", "", i) for i in decklist[1:12]]
+    decklist = [i.strip() for i in decklist]
+    return decklist
+
+def parse_energy(raw_decklist: str, unique_energy: list) -> dict:
+    '''Returns an ENERGY dict from  raw DECKLIST.'''
+    split_decklist = raw_decklist.split("#")
+    # Finds numeric values betwee parentheses, denoting energy values
+    raw_energy = [re.findall(r"\((\d)\)", i)[0] for i in split_decklist[1:12]]
+    count_energy = [raw_energy.count(i) for i in unique_energy]
+    energy = dict(zip(unique_energy, count_energy))
+    return energy
+
 with open(PATH_CARDS_JSON, mode="r") as f:
     cards = json.load(f)
 
@@ -122,13 +139,18 @@ def view_deck(id):
     deck = db.first_or_404(
         db.select(Deck).filter_by(id=id)
     )
+    # Tags as a single string
+    current_tags = ", ".join([i.name for i in deck.tags])
     edit = request.args.get("edit")
     if edit and request.method == "POST":
         deck.name     = request.form["name"]
         deck.decklist = request.form["decklist"]
         tag_names     = request.form["tag"]
         tag_names = [i.strip() for i in tag_names.split(",")]
-        # Check if tag already exists
+        for tag in deck.tags:
+            if tag.name not in tag_names:
+                deck.tags.remove(tag)
+        # Check if new tag already exists
         for tag_name in tag_names:
             tag_in_db = db.session.execute(
                 db.select(Tag).filter_by(name=tag_name)
@@ -146,8 +168,6 @@ def view_deck(id):
             ))
     if edit:
         title = f"Editing deck: {deck.name}"
-        # Tags as a single string
-        current_tags = ", ".join([i.name for i in deck.tags])
         form = FormDecks(
             name=deck.name,
             decklist=deck.decklist,
@@ -159,18 +179,11 @@ def view_deck(id):
             deck=deck,
             form=form,
         )
-    raw_decklist = deck.decklist
-    raw_decklist = raw_decklist.split("#")
-    # 1:12 is the position of the card names in a standard decklist
-    decklist = [re.sub(r"\(.\) ", "", i) for i in raw_decklist[1:12]]
-    raw_energy = [re.findall(r"\((\d)\)", i)[0] for i in raw_decklist[1:12]]
-    unique_energy = UNIQUE_ENERGY
-    count_energy = [raw_energy.count(i) for  i in unique_energy]
-    energy=dict(zip(unique_energy, count_energy))
-
-    decklist = [i.strip() for i in decklist]
-    # 23 is the position of the deck code in a standard decklist
-    deck_code = raw_decklist[13]
+    raw_decklist = deck.decklist    
+    decklist = parse_cards(raw_decklist)
+    energy = parse_energy(raw_decklist, UNIQUE_ENERGY)
+    # 13 is the position of the deck code in a standard decklist
+    deck_code = raw_decklist.split("#")[13]
     return render_template(
         "deck.html",
         title="Deck: " + deck.name,
