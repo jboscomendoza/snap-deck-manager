@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <form class="col-12" method="POST" name="delete-deck">
+        {% from "bootstrap5/form.html" import render_form %}
+        {{ render_form(
+            form,
+            method="POST",
+            action=url_for(
+                "decks.delete_deck",
+                id=deleted_deck.id,
+            )
+        )}}
+    </form>
+</div>
+
+{% endblock content %}
+

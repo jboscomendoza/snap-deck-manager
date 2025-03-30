@@ -4,7 +4,7 @@ from flask import (
     )
 from app.extensions import db
 from app.decks import bp
-from app.forms.decks import FormDecks
+from app.forms.decks import FormDecks, DeleteDeck
 from app.models.decks import Deck, Tag
 import re
 import json
@@ -77,7 +77,7 @@ def add_decks():
                 deck.tags.append(new_tag)
         db.session.add(deck)
         db.session.commit()
-        flash("Deck added.")
+        flash(f"Deck {deck_name} added.")
         return redirect(url_for(
             "decks.get_decks"
         ))
@@ -109,6 +109,35 @@ def get_decks():
         deck_items=deck_items,
         decks=decks,
     )
+
+@bp.route("/delete-deck/<string:id>", methods=["GET", "POST"])
+def delete_deck(id: int):
+    form = DeleteDeck()
+    request.args.get("delete")
+    deleted_deck = db.first_or_404(
+        db.select(Deck).filter_by(id=id)
+    )
+    if request.method == "POST" and request.form["confirm"] == "Yes":
+        db.session.execute(
+            db.delete(Deck).filter_by(id=deleted_deck.id)
+            )
+        db.session.commit()
+        flash(f"Deck {deleted_deck.name} deleted!")
+        return redirect(url_for(
+            "decks.get_decks"
+            ))
+    elif request.method == "POST" and request.form["confirm"] == "No":
+        return redirect(url_for(
+            "decks.view_deck",
+            id=deleted_deck.id,
+            ))
+    title = f"Delete deck: {deleted_deck.name}?"
+    return render_template(
+        "delete-deck.html",
+        title=title,
+        deleted_deck=deleted_deck,
+        form=form,
+        )
 
 @bp.route("/tag/", methods=["GET"])
 @bp.route("/tag/<string:tag>/", methods=["GET"])

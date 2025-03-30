@@ -6,9 +6,9 @@
         <table class="table table-hover table-sm" >
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Tags</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col" style="width:25%;">Name</th>
+                    <th scope="col" style="width:25%;">Tags</th>
+                    <th scope="col" style="width:25%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +37,12 @@
                         href={{ url_for("decks.view_deck", id=deck.id, edit=True)}} 
                         >
                         Edit
+                        </a>
+                        <a
+                        class="btn btn-danger btn-md"
+                        href={{ url_for("decks.delete_deck", id=deck.id)}} 
+                        >
+                        Delete
                         </a>
                     </td>
                 </tr>

@@ -80,11 +80,18 @@
 
 <div class="row">
     <div class="col-12">
+        <p class="h3">Actions</p>
         <a
         class="btn btn-primary btn-md"
         href={{ url_for("decks.view_deck", id=deck.id, edit=True)}} 
         >
         Edit
+        </a>
+        <a
+        class="btn btn-danger btn-md"
+        href={{ url_for("decks.delete_deck", id=deck.id)}} 
+        >
+        Delete
         </a>
     </div>
 </div>

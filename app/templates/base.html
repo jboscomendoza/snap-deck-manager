@@ -7,16 +7,23 @@
     {% endblock styles %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale-1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {% block title %}
     <div class="row">
         <title>{{ title }} - SNAP deck manager</title>
     </div>
     {% endblock title %}
 </head>
-
 <body>
     <div class="container">
         {% include "navbar.html" %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="row">
             <p class="h1">{{ title }}</p>
         </div>

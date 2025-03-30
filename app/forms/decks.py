@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (
-    StringField, SelectField, SubmitField, TextAreaField
+    StringField, RadioField, SubmitField, TextAreaField
 )
 from wtforms.validators import DataRequired, Length
 
@@ -27,4 +27,11 @@ class FormDecks(FlaskForm):
         ]
     )
     send = SubmitField("Send")
-    
+
+class DeleteDeck(FlaskForm):
+    confirm = RadioField(
+        "Confirm deletion", 
+        choices=["No", "Yes"],
+        default="No"
+        )
+    send = SubmitField("Send")

@@ -18,6 +18,6 @@ class Deck(db.Model):
 class Tag(db.Model):
     __tablename__ = "tags"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), nullable=False)
+    name = db.Column(db.String(32), unique=True, nullable=False)
     def __repr__(self):
         return f"<Tag: '{self.name}'>"
