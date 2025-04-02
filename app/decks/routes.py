@@ -5,7 +5,7 @@ from flask import (
 from app.extensions import db
 from app.decks import bp
 from app.forms.decks import FormDecks, DeleteDeck
-from app.models.decks import Deck, Tag
+from app.models.decks import Deck, Tag, deck_tag
 import re
 import json
 from os import path
@@ -54,8 +54,8 @@ def index():
 
 @bp.route("/add-decks/", methods=["GET", "POST"])
 def add_decks():
-    title="Add new deck"
-    form=FormDecks()
+    title = "Add new deck"
+    form  = FormDecks()
     if form.validate_on_submit() and request.method == "POST":
         deck_name     = request.form["name"]
         deck_decklist = request.form["decklist"]
@@ -63,18 +63,18 @@ def add_decks():
             name     = deck_name,
             decklist = deck_decklist,
         )
-        tag_names     = request.form["tag"]
+        tag_names = request.form["tag"]
         tag_names = [i.strip() for i in tag_names.split(",")]
-        # Check if tag already exists
+        # Check if new tag already exists and if deck is already tagged
         for tag_name in tag_names:
             tag_in_db = db.session.execute(
                 db.select(Tag).filter_by(name=tag_name)
             ).scalar_one_or_none()
-            if tag_in_db:
-                deck.tags.append(tag_in_db)
-            else:
+            if not tag_in_db:
                 new_tag = Tag(name=tag_name)
                 deck.tags.append(new_tag)
+            else:
+                deck.tags.append(tag_in_db)
         db.session.add(deck)
         db.session.commit()
         flash(f"Deck {deck_name} added.")
@@ -155,13 +155,27 @@ def get_tags(tag=None):
     else:
         title = f"Decks with tag: {tag}"
         decks = db.session.execute(
-            db.select(Deck).join(Deck.tags).filter(Tag.name == tag)
-        ).scalars()
+            db.select(Deck)
+            .join(Deck.tags)
+            .filter(Tag.name == tag)
+        ).scalars().unique()
         return render_template(
             "get-decks.html",
             title=title,
             decks=decks,
             )
+
+@bp.route("/test/")
+def test():
+    tabla = db.session.query(deck_tag)
+    tags  = db.session.query(Tag)
+    decks = db.session.query(Deck)
+    return render_template(
+        "test.html",
+        tabla=tabla,
+        tags=tags,
+        decks=decks,
+    )
 
 @bp.route("/deck/<int:id>", methods=["GET", "POST"])
 def view_deck(id):
@@ -176,19 +190,22 @@ def view_deck(id):
         deck.decklist = request.form["decklist"]
         tag_names     = request.form["tag"]
         tag_names = [i.strip() for i in tag_names.split(",")]
+        # Remove tags no longer listed
         for tag in deck.tags:
             if tag.name not in tag_names:
                 deck.tags.remove(tag)
-        # Check if new tag already exists
+        # Check if new tag already exists and if deck is already tagged
         for tag_name in tag_names:
             tag_in_db = db.session.execute(
                 db.select(Tag).filter_by(name=tag_name)
             ).scalar_one_or_none()
-            if tag_in_db:
-                deck.tags.append(tag_in_db)
-            else:
+            if not tag_in_db:
                 new_tag = Tag(name=tag_name)
                 deck.tags.append(new_tag)
+            elif tag_in_db and not(tag_in_db in deck.tags):
+                deck.tags.append(tag_in_db)
+            elif tag_in_db and (tag_in_db in deck.tags):
+                pass
         db.session.commit()
         flash("Deck updated!")
         return redirect(url_for(
