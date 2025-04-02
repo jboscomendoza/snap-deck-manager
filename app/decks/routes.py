@@ -165,18 +165,6 @@ def get_tags(tag=None):
             decks=decks,
             )
 
-@bp.route("/test/")
-def test():
-    tabla = db.session.query(deck_tag)
-    tags  = db.session.query(Tag)
-    decks = db.session.query(Deck)
-    return render_template(
-        "test.html",
-        tabla=tabla,
-        tags=tags,
-        decks=decks,
-    )
-
 @bp.route("/deck/<int:id>", methods=["GET", "POST"])
 def view_deck(id):
     deck = db.first_or_404(
